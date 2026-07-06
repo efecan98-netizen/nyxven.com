@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>nyxven.com</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      background-color: #0e0e0e;
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+      color: #f0f0f0;
+      line-height: 1.6;
+    }
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 16px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(14, 14, 14, 0.9);
+      backdrop-filter: blur(10px);
+      z-index: 999;
+      border-bottom: 1px solid #2a2a2a;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      flex-wrap: wrap;
+    }
+    .nav-left a, .nav-right a {
+      color: #ccc;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      transition: color 0.2s;
+      cursor: pointer;
+    }
+    .nav-left a:hover, .nav-right a:hover {
+      color: #a29bfe;
+    }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .discord-icon {
+      font-size: 22px;
+      color: #5865F2;
+      transition: transform 0.2s;
+    }
+    .discord-icon:hover {
+      transform: scale(1.2);
+      color: #8ea1ff;
+    }
+    .nav-right .login-btn {
+      color: #a29bfe;
+      font-weight: 600;
+    }
+    .nav-right .login-btn:hover {
+      color: #fff;
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 120px 20px 60px;
+      background: radial-gradient(circle at 30% 10%, #1a1a2e, #0e0e0e);
+    }
+    .hero .avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 24px;
+      box-shadow: 0 0 40px rgba(108, 92, 231, 0.3);
+    }
+    .hero h1 {
+      font-size: 52px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      background: linear-gradient(to right, #f0f0f0, #a29bfe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+    .hero .cc {
+      font-size: 22px;
+      color: #ccc;
+      margin-bottom: 4px;
+    }
+    .hero .tagline {
+      font-size: 18px;
+      color: #888;
+      margin-bottom: 20px;
+    }
+
+    .section {
+      display: none;
+      padding: 80px 20px 40px;
+      max-width: 900px;
+      margin: 0 auto;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      scroll-margin-top: 100px;
+    }
+    .section.visible {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .section h2 {
+      font-size: 36px;
+      font-weight: 600;
+      margin-bottom: 30px;
+      border-left: 4px solid #6c5ce7;
+      padding-left: 20px;
+    }
+    .section p {
+      color: #bbb;
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      margin-top: 20px;
+    }
+    .contact-form input,
+    .contact-form textarea {
+      background: #1e1e1e;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-size: 16px;
+      color: #f0f0f0;
+      outline: none;
+      transition: border 0.2s;
+      font-family: inherit;
+    }
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+      border-color: #6c5ce7;
+    }
+    .contact-form textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+    .contact-form button {
+      background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+      border: none;
+      padding: 16px;
+      border-radius: 40px;
+      font-size: 18px;
+      font-weight: 600;
+      color: #fff;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(108, 92, 231, 0.3);
+    }
+    .contact-form button:hover {
+      transform: scale(1.02);
+      box-shadow: 0 6px 30px rgba(108, 92, 231, 0.5);
+    }
+
+    .contact-info {
+      margin-top: 30px;
+      background: #1a1a1a;
+      padding: 24px 28px;
+      border-radius: 16px;
+      border: 1px solid #2a2a2a;
+    }
+    .contact-info .name {
+      font-size: 22px;
+      font-weight: 600;
+      color: #f0f0f0;
+    }
+    .contact-info .email {
+      font-size: 18px;
+      color: #aaa;
+      margin-top: 4px;
+    }
+    .contact-info .email i {
+      margin-right: 10px;
+      color: #6c5ce7;
+    }
+
+    .channel-card {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 16px;
+      padding: 24px 28px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      transition: border 0.3s;
+      flex-wrap: wrap;
+    }
+    .channel-card:hover {
+      border-color: #6c5ce7;
+    }
+    .channel-card .channel-icon {
+      font-size: 40px;
+      width: 60px;
+      text-align: center;
+    }
+    .channel-card .channel-info {
+      flex: 1;
+    }
+    .channel-card h3 {
+      font-size: 22px;
+      margin-bottom: 4px;
+      color: #f0f0f0;
+    }
+    .channel-card p {
+      color: #888;
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+    .channel-card a {
+      display: inline-block;
+      background: #6c5ce7;
+      color: #fff;
+      padding: 6px 22px;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .channel-card a:hover {
+      background: #5a4bd1;
+      transform: scale(1.03);
+    }
+
+    .social-channels {
+      display: flex;
+      gap: 30px;
+      justify-content: center;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+    .social-channels a {
+      color: #aaa;
+      font-size: 36px;
+      transition: color 0.3s, transform 0.2s;
+    }
+    .social-channels a:hover {
+      color: #a29bfe;
+      transform: scale(1.15);
+    }
+    .social-channels a.youtube-channel {
+      color: #ff0000;
+    }
+    .social-channels a.tiktok-channel {
+      color: #000;
+      background: #fff;
+      border-radius: 8px;
+      padding: 4px;
+      line-height: 1;
+    }
+    .social-channels a.discord-channel {
+      color: #5865F2;
+    }
+
+    .login-box, .register-box {
+      background: #1a1a1a;
+      padding: 30px;
+      border-radius: 20px;
+      border: 1px solid #2a2a2a;
+      max-width: 400px;
+      margin: 0 auto 30px;
+    }
+    .login-box input, .register-box input {
+      display: block;
+      width: 100%;
+      padding: 14px 18px;
+      margin-bottom: 14px;
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 10px;
+      color: #f0f0f0;
+      font-size: 16px;
+    }
+    .login-box input:focus, .register-box input:focus {
+      border-color: #6c5ce7;
+      outline: none;
+    }
+    .login-box button, .register-box button {
+      width: 100%;
+      padding: 14px;
+      background: #6c5ce7;
+      border: none;
+      border-radius: 40px;
+      color: #fff;
+      font-weight: 600;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .login-box button:hover, .register-box button:hover {
+      background: #5a4bd1;
+    }
+    .switch-form {
+      text-align: center;
+      margin-top: 12px;
+      color: #888;
+    }
+    .switch-form a {
+      color: #a29bfe;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 40px 20px 30px;
+      color: #555;
+      font-size: 14px;
+      border-top: 1px solid #1e1e1e;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 700px) {
+      .navbar {
+        padding: 12px 16px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+      }
+      .nav-left, .nav-right {
+        justify-content: center;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+      .hero h1 {
+        font-size: 36px;
+      }
+      .hero .avatar {
+        width: 90px;
+        height: 90px;
+        font-size: 36px;
+      }
+      .section {
+        padding: 60px 16px 30px;
+      }
+      .section h2 {
+        font-size: 28px;
+      }
+      .channel-card {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-left">
+    <a onclick="goToSection('hakkimda')">Hakkımda</a>
+    <a onclick="goToSection('projelerim')">Projelerim</a>
+    <a onclick="goToSection('kanallarim')">Kanallarım</a>
+  </div>
+  <div class="nav-right">
+    <a onclick="goToSection('iletisim')">İletişim</a>
+    <a href="https://discord.gg/sunucu-linki" target="_blank" class="discord-icon" title="Discord">
+      <i class="fab fa-discord"></i>
+    </a>
+    <a id="loginBtn" onclick="handleLoginClick()" class="login-btn">Giriş Yap</a>
+    <a id="registerBtn" onclick="goToSection('kayit')">Kayıt Ol</a>
+  </div>
+</nav>
+
+<section class="hero" id="anasayfa">
+  <div class="avatar">✎</div>
+  <h1>Editor.</h1>
+  <div class="cc">CC</div>
+  <div class="tagline">İçerik Üreticisi</div>
+</section>
+
+<section class="section" id="hakkimda">
+  <h2>Hakkımda</h2>
+  <p>
+    Ben efecan, içerik üreticisi. Teknoloji, tasarım ve yaratıcı projelere ilgi duyuyorum.
+    Bu sitede çalışmalarımı, kanallarımı ve iletişim bilgilerimi bulabilirsin.
+  </p>
+</section>
+
+<section class="section" id="projelerim">
+  <h2>Projelerim</h2>
+  <p style="font-size: 20px; color: #888;">Şu an için aktif bir projem yok.</p>
+</section>
+
+<section class="section" id="kanallarim">
+  <h2>Kanallarım</h2>
+
+  <div class="channel-card">
+    <div class="channel-icon"><i class="fab fa-youtube"></i></div>
+    <div class="channel-info">
+      <h3>Anakanalım</h3>
+      <p>Ana YouTube kanalımda çeşitli içerikler bulabilirsin.</p>
+      <a href="https://www.youtube.com/channel/UCM6EXLZFrqGu5Yd0gf1PCpg" target="_blank">Göz At</a>
+    </div>
+  </div>
+
+  <div class="channel-card">
+    <div class="channel-icon">🍋</div>
+    <div class="channel-info">
+      <h3>Limon Tayfa Kanalı</h3>
+      <p>Eğlenceli ve komik içeriklerin olduğu kanal.</p>
+      <a href="https://www.youtube.com/channel/UCW-6e6z1U0UQ_Rjk-Vn2buA" target="_blank">Göz At</a>
+    </div>
+  </div>
+
+  <div class="channel-card">
+    <div class="channel-icon">🚛</div>
+    <div class="channel-info">
+      <h3>Tırlarla İlgili Global Kanalım</h3>
+      <p>Dünya genelinde tır ve yolculuk içerikleri.</p>
+      <a href="https://www.youtube.com/channel/UClEw9mpj18NkIAetNMA_DiA" target="_blank">Göz At</a>
+    </div>
+  </div>
+
+  <div class="social-channels">
+    <a href="https://www.youtube.com/@RENXC-c3d" target="_blank" class="youtube-channel" title="YouTube"><i class="fab fa-youtube"></i></a>
+    <a href="https://www.tiktok.com/@nyxven.inc" target="_blank" class="tiktok-channel" title="TikTok"><i class="fab fa-tiktok"></i></a>
+    <a href="https://discord.gg/sunucu-linki" target="_blank" class="discord-channel" title="Discord"><i class="fab fa-discord"></i></a>
+  </div>
+</section>
+
+<section class="section" id="iletisim">
+  <h2>İletişim</h2>
+  <p>
+    İş teklifleri, sponsorluk, telif hakkı ve her türlü konu için bana ulaşabilirsiniz.
+  </p>
+
+  <form class="contact-form" action="https://formspree.io/f/mdarbrdp" method="POST">
+    <input type="text" name="name" placeholder="İsim veya kullanıcı adınız" required>
+    <input type="email" name="email" placeholder="E-posta adresiniz" required>
+    <textarea name="message" placeholder="Mesajınız" required></textarea>
+    <button type="submit">Gönder</button>
+  </form>
+
+  <div class="contact-info">
+    <div class="name">Efe Can Ülke</div>
+    <div class="email"><i class="fas fa-envelope"></i> ulkerefecan98@gmail.com</div>
+  </div>
+</section>
+
+<section class="section" id="giris">
+  <h2>Giriş Yap</h2>
+  <div class="login-box">
+    <input type="text" id="loginUser" placeholder="Kullanıcı adı veya e-posta">
+    <input type="password" id="loginPass" placeholder="Şifre">
+    <button onclick="login()">Giriş Yap</button>
+    <div class="switch-form">
+      Hesabın yok mu? <a onclick="goToSection('kayit')">Kayıt Ol</a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="kayit">
+  <h2>Kayıt Ol</h2>
+  <div class="register-box">
+    <input type="text" id="regName" placeholder="Kullanıcı adı">
+    <input type="email" id="regEmail" placeholder="E-posta">
+    <input type="password" id="regPass" placeholder="Şifre">
+    <button onclick="register()">Kayıt Ol</button>
+    <div class="switch-form">
+      Zaten hesabın var mı? <a onclick="goToSection('giris')">Giriş Yap</a>
+    </div>
+  </div>
+</section>
+
+<div class="footer">
+  &copy; 2026 nyxven.com
+</div>
+
+<script>
+  function goToSection(id) {
+    document.querySelectorAll('.section').forEach(sec => {
+      sec.classList.remove('visible');
+      sec.style.display = 'none';
+    });
+    const target = document.getElementById(id);
+    if (target) {
+      target.style.display = 'block';
+      requestAnimationFrame(() => {
+        target.classList.add('visible');
+      });
+      setTimeout(() => {
+        const yOffset = -100;
+        const y = target.getBoundingClientRect().top + window.scrollY + yOffset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }, 100);
+    }
+    if (id === 'giris' || id === 'kayit') {
+      const isLogged = localStorage.getItem('nyxven_login') === 'true';
+      if (isLogged) {
+        alert('Zaten giriş yapmış durumdasınız.');
+        document.getElementById(id).style.display = 'none';
+        document.getElementById(id).classList.remove('visible');
+        return;
+      }
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.section').forEach(sec => {
+      sec.style.display = 'none';
+      sec.classList.remove('visible');
+    });
+    checkLoginStatus();
+  });
+
+  function register() {
+    const name = document.getElementById('regName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const pass = document.getElementById('regPass').value.trim();
+    if (!name || !email || !pass) {
+      alert('Tüm alanları doldurun.');
+      return;
+    }
+    let users = JSON.parse(localStorage.getItem('nyxven_users')) || [];
+    if (users.find(u => u.name === name)) {
+      alert('Bu kullanıcı adı zaten alınmış.');
+      return;
+    }
+    if (users.find(u => u.email === email)) {
+      alert('Bu e-posta zaten kayıtlı.');
+      return;
+    }
+    users.push({ name, email, password: pass });
+    localStorage.setItem('nyxven_users', JSON.stringify(users));
+    alert('Kayıt başarılı! Şimdi giriş yapabilirsin.');
+    goToSection('giris');
+  }
+
+  function login() {
+    const userInput = document.getElementById('loginUser').value.trim();
+    const passInput = document.getElementById('loginPass').value.trim();
+    if (!userInput || !passInput) {
+      alert('Kullanıcı adı/e-posta ve şifre girin.');
+      return;
+    }
+    const users = JSON.parse(localStorage.getItem('nyxven_users')) || [];
+    const found = users.find(u => (u.name === userInput || u.email === userInput) && u.password === passInput);
+    if (found) {
+      localStorage.setItem('nyxven_login', 'true');
+      localStorage.setItem('nyxven_current_user', found.name);
+      alert('Giriş başarılı!');
+      document.getElementById('giris').style.display = 'none';
+      document.getElementById('giris').classList.remove('visible');
+      checkLoginStatus();
+      location.reload();
+    } else {
+      alert('Kullanıcı adı/e-posta veya şifre hatalı.');
+    }
+  }
+
+  function logout() {
+    localStorage.removeItem('nyxven_login');
+    localStorage.removeItem('nyxven_current_user');
+    alert('Çıkış yapıldı.');
+    location.reload();
+  }
+
+  function checkLoginStatus() {
+    const isLogged = localStorage.getItem('nyxven_login') === 'true';
+    const loginBtn = document.getElementById('loginBtn');
+    const registerBtn = document.getElementById('registerBtn');
+    if (isLogged) {
+      loginBtn.textContent = 'Çıkış Yap';
+      loginBtn.onclick = logout;
+      loginBtn.style.color = '#ff6b6b';
+      registerBtn.style.display = 'none';
+    } else {
+      loginBtn.textContent = 'Giriş Yap';
+      loginBtn.onclick = handleLoginClick;
+      loginBtn.style.color = '#a29bfe';
+      registerBtn.style.display = 'inline';
+    }
+  }
+
+  function handleLoginClick() {
+    const isLogged = localStorage.getItem('nyxven_login') === 'true';
+    if (isLogged) {
+      logout();
+    } else {
+      goToSection('giris');
+    }
+  }
+</script>
+</body>
+</html>
